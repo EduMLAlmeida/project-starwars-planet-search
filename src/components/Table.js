@@ -4,15 +4,15 @@ import Context from '../context/Context';
 function Table() {
   const {
     getData,
-    data,
     search,
+    filtered,
   } = useContext(Context);
 
   useEffect(() => {
     getData();
   }, []);
 
-  const resultPlanets = data.filter(
+  const searchFiltered = filtered.filter(
     (element) => element.name.toLowerCase().includes(search.toLowerCase()),
   );
 
@@ -35,8 +35,9 @@ function Table() {
           <th>Edited</th>
         </tr>
       </thead>
+
       <tbody>
-        {resultPlanets.map((element, index) => (
+        {searchFiltered.map((element, index) => (
           <tr key={ index }>
             <td>{ element.name }</td>
             <td>{ element.rotation_period }</td>
