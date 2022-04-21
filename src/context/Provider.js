@@ -13,9 +13,11 @@ function Provider({ children }) {
   const [filters, setFilters] = useState([]);
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState([]);
+  const [availableColumns, setAvailableColumns] = useState([]);
 
   const getData = async () => {
     const dataResponse = await fetchData();
+
     setData(dataResponse.results);
   };
 
@@ -30,6 +32,38 @@ function Provider({ children }) {
     ]);
   };
 
+  const handleColumns = () => {
+    const columns = [
+      'population',
+      'orbital_period',
+      'diameter',
+      'rotation_period',
+      'surface_water',
+    ];
+
+    const unavailableColumns = filters.map(
+      (filter) => filter.column,
+    );
+
+    const availableColumns2 = [];
+
+    columns.forEach((columnOption) => {
+      const test = unavailableColumns.find(
+        (unavailableColumnOption) => columnOption === unavailableColumnOption,
+      );
+      if (!test) {
+        availableColumns2.push(columnOption);
+      }
+    });
+
+    setNumeric({
+      ...numeric,
+      column: availableColumns2[0],
+    });
+
+    setAvailableColumns(availableColumns2);
+  };
+
   const handleFilter = () => {
     let planets = data;
 
@@ -37,11 +71,15 @@ function Provider({ children }) {
       filters.forEach((savedFilter) => {
         if (savedFilter.comparison === 'maior que') {
           planets = planets.filter(
-            (planet) => parseInt(planet[savedFilter.column], 10) > savedFilter.value,
+            (planet) => parseInt(
+              planet[savedFilter.column], 10,
+            ) > savedFilter.value,
           );
         } else if (savedFilter.comparison === 'menor que') {
           planets = planets.filter(
-            (planet) => parseInt(planet[savedFilter.column], 10) < savedFilter.value,
+            (planet) => parseInt(
+              planet[savedFilter.column], 10,
+            ) < savedFilter.value,
           );
         } else if (savedFilter.comparison === 'igual a') {
           planets = planets.filter(
@@ -53,6 +91,7 @@ function Provider({ children }) {
       });
     }
 
+    handleColumns();
     setFiltered(planets);
   };
 
@@ -88,13 +127,14 @@ function Provider({ children }) {
   const contextValue = {
     getData,
     search,
+    filtered,
     numeric,
     handleSearchChange,
     handleColumnChange,
     handleComparisonChange,
     handleValueChange,
-    filtered,
     saveFilter,
+    availableColumns,
   };
 
   return (

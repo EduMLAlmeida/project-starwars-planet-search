@@ -10,6 +10,7 @@ function FilterForm() {
     handleComparisonChange,
     handleValueChange,
     saveFilter,
+    availableColumns,
   } = useContext(Context);
 
   return (
@@ -36,11 +37,23 @@ function FilterForm() {
           value={ numeric.column }
           onChange={ handleColumnChange }
         >
-          <option value="population">population</option>
+          {
+            availableColumns.map(
+              (columnAvailableOption) => (
+                <option
+                  key={ columnAvailableOption }
+                  value={ `${columnAvailableOption}` }
+                >
+                  { columnAvailableOption }
+                </option>
+              ),
+            )
+          }
+          {/* <option value="population">population</option>
           <option value="orbital_period">orbital_period</option>
           <option value="diameter">diameter</option>
           <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          <option value="surface_water">surface_water</option> */}
         </select>
       </label>
 
