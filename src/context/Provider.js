@@ -21,6 +21,24 @@ function Provider({ children }) {
     setData(dataResponse.results);
   };
 
+  const clearClickedFilter = (column, comparison, value) => {
+    const clickedFilterObject = {
+      column,
+      comparison,
+      value,
+    };
+    const newFilters = filters.filter(
+      (filter) => filter.column !== clickedFilterObject.column
+      && filter.comparison !== clickedFilterObject.comparison
+      && filter.value !== clickedFilterObject.value,
+    );
+    setFilters(newFilters);
+  };
+
+  const clearAllFilters = () => {
+    setFilters([]);
+  };
+
   const saveFilter = () => {
     setFilters([
       ...filters,
@@ -135,6 +153,9 @@ function Provider({ children }) {
     handleValueChange,
     saveFilter,
     availableColumns,
+    filters,
+    clearAllFilters,
+    clearClickedFilter,
   };
 
   return (
